@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"pius/router"
 	"time"
 
 	"github.com/rs/cors"
@@ -38,21 +39,21 @@ func corsHandler() *cors.Cors {
 
 func serve(cmd *cobra.Command, args []string) error {
 	
-	// mainRoute := "Still no router"
+	mainRoute := router.RouterApp()
 
 	var address string = "0.0.0.0:3007"
 	if PORT := os.Getenv("PORT"); PORT != "" {
 		address = "0.0.0.0:" + PORT
 	}
 
-	// cors := corsHandler()
+	cors := corsHandler()
 
 	serve := &http.Server{
 		Addr: address,
 		WriteTimeout: time.Minute * 2,
 		ReadTimeout: time.Minute * 2,
 		IdleTimeout: time.Minute,
-		// Handler: cors.Handler(),
+		Handler: cors.Handler(mainRoute),
 	}
 
 	log.Println("App is running on PORT 3007")
