@@ -71,7 +71,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # addition ignored file
-sql
+# sql
 .vscode
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,go
