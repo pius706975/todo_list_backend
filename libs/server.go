@@ -41,7 +41,7 @@ func serve(cmd *cobra.Command, args []string) error {
 	
 	mainRoute := router.RouterApp()
 
-	var address string = "0.0.0.0:3007"
+	var address string = "0.0.0.0:" + os.Getenv("PORT")
 	if PORT := os.Getenv("PORT"); PORT != "" {
 		address = "0.0.0.0:" + PORT
 	}
@@ -56,7 +56,7 @@ func serve(cmd *cobra.Command, args []string) error {
 		Handler: cors.Handler(mainRoute),
 	}
 
-	log.Println("App is running on PORT 3007")
+	log.Println("App is running on PORT", os.Getenv("PORT"))
 
 	return serve.ListenAndServe()
 }
