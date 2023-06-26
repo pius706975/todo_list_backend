@@ -1,38 +1,24 @@
 package databases
 
-import (
-	"database/sql"
-	"fmt"
-	"os"
+import "os"
 
-	"github.com/joho/godotenv"
-	_ "github.com/go-sql-driver/mysql"
-)
+type Configuration struct {
+	DB_HOST string
+	DB_PORT string
+	DB_USER string
+	DB_PASS string
+	DB_NAME string
+}
 
-func NewDB() (*sql.DB, error) {
+func GetConfig() Configuration {
 	
-	if err := godotenv.Load(".env"); err != nil {
-		return nil, fmt.Errorf("error loading .env: %s", err.Error())
+	conf := Configuration{
+		DB_HOST: os.Getenv("MYSQL_HOST"),
+		DB_PORT: os.Getenv("MYSQL_PORT"),
+		DB_USER: os.Getenv("MYSQL_USER"),
+		DB_PASS: os.Getenv("MYSQL_PASSWORD"),
+		DB_NAME: os.Getenv("MYSQL_DBNAME"),
 	}
 
-	dbHost := os.Getenv("MYSQL_HOST")
-	dbPort := os.Getenv("MYSQL_PORT")
-	dbUser := os.Getenv("MYSQL_USER")
-	dbPass := os.Getenv("MYSQL_PASSWORD")
-	dbName := os.Getenv("MYSQL_DBNAME")
-
-	// Data source name
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPass, dbHost, dbPort, dbName)
-
-	db, err := sql.Open("mysql", dsn)
-	if err != nil {
-		return nil, fmt.Errorf("error connectiong to the database: %s", err.Error())
-	}
-
-	err = db.Ping()
-	if err != nil {
-		return nil, fmt.Errorf("error pinging the database: %s", err.Error())
-	}
-
-	return db, nil
+	return conf
 }
