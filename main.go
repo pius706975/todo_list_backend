@@ -4,8 +4,9 @@ import (
 	"log"
 	"os"
 	commandline "pius/commandLine"
-	_ "github.com/joho/godotenv/autoload"
+
 	"github.com/asaskevich/govalidator"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func init()  {
