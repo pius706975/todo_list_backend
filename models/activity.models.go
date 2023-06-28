@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"pius/databases"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Activity struct {
@@ -25,7 +23,7 @@ func GetAllActivities() (Response, error) {
 
 	conn := databases.CreateConn()
 
-	sqlStatement := "SELECT * FROM activities"
+	sqlStatement := "SELECT * FROM activities ORDER BY created_at DESC"
 
 	rows, err := conn.Query(sqlStatement)
 	defer rows.Close()
@@ -49,21 +47,21 @@ func GetAllActivities() (Response, error) {
 	return res, nil
 }
 
-func GetByID(ID string) (Response, error) {
+func GetByID(ID int) (Response, error) {
 	
 	var obj Activity
 	var res Response
 
 	conn := databases.CreateConn()
 
-	sqlStatement := "SELECT * FROM activities WHERE activity_id = ? LIMIT 1"
+	sqlStatement := "SELECT * FROM activities WHERE activity_id = ?"
 
 	err := conn.QueryRow(sqlStatement, ID).Scan(&obj.ActivityID, &obj.Title, &obj.Email, &obj.CreatedAt, &obj.UpdatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			res.Status = http.StatusNotFound
 			res.Message = "Data not found"
-			res.Data = nil
+			res.Data = ""
 			return res, nil
 		}
 
@@ -84,7 +82,6 @@ func AddActivity(title, email string) (Response, error) {
 	var res Response
 
 	conn := databases.CreateConn()
-	ID := uuid.New().String()
 
 	sqlStatement := "INSERT INTO activities (title, email) VALUES (?, ?)"
 
@@ -93,19 +90,28 @@ func AddActivity(title, email string) (Response, error) {
 		return res, err
 	}
 
-	_, err = prepareStatement.Exec(title, email)
+	result, err := prepareStatement.Exec(title, email)
 	if err != nil {
 		return res, err
 	}
 
-	result, err := GetByID(ID)
+	ID, err := result.LastInsertId()
+	if err != nil {
+		return res, err
+	}
+
+	newData, err := GetByID(int(ID))
 	if err != nil {
 		return res, err
 	}
 
 	res.Status = http.StatusOK
 	res.Message = "Ok"
-	res.Data = result.Data
+	res.Data = newData.Data
 
 	return res, nil
 }
+
+// func DeleteActivity()  {
+
+// }

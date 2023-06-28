@@ -11,14 +11,18 @@ func RouterApp() *echo.Echo {
 	
 	e := echo.New()
 
+	group := e.Group("")
+
+	activity := group.Group("activity-groups")
+
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "This is To Do List App")
 	})
 
 	// Activity Controllers
-	e.GET("/activities", controllers.GetAllActivitiesCTRL)
-	e.GET("/activities/:id", controllers.GetByIDCTRL)
-	e.POST("/add_activity", controllers.AddActivityCTRL)
+	activity.GET("/", controllers.GetAllActivitiesCTRL)
+	activity.GET("/:id", controllers.GetByIDCTRL)
+	activity.POST("/create", controllers.AddActivityCTRL)
 
 	return e
 }

@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"pius/models"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -22,7 +23,17 @@ func GetByIDCTRL(c echo.Context) error {
 	// Get ID from request parameters
 	ID := c.Param("id")
 
-	activity, err := models.GetByID(ID)
+	activityID, err := strconv.Atoi(ID)
+	if err != nil {
+		res := models.Response{
+			Status: http.StatusBadRequest,
+			Message: "Invalid ID",
+			Data: "",
+		}
+		return c.JSON(http.StatusBadRequest, res)
+	}
+
+	activity, err := models.GetByID(activityID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),

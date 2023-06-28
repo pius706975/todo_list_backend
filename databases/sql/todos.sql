@@ -1,5 +1,5 @@
 CREATE TABLE todos (
-  todo_id CHAR(36) NOT NULL DEFAULT (UUID()) PRIMARY KEY,
+  todo_id BIGINT NOT NULL PRIMARY KEY,
   activity_group_id CHAR(36),
   title VARCHAR(255),
   priority INT,
