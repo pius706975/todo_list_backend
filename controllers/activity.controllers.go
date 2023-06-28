@@ -59,3 +59,25 @@ func AddActivityCTRL(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func DeleteActivityCTRL(c echo.Context) error {
+	
+	ID := c.Param("id")
+	
+	activityID, err := strconv.Atoi(ID)
+	if err != nil {
+		res := models.Response{
+			Status: http.StatusBadRequest,
+			Message: "Invalid ID",
+			Data: "",
+		}
+		return c.JSON(http.StatusBadRequest, res)
+	}
+
+	getData, err := models.DeleteActivity(activityID)
+	if err != nil {
+		return c.JSON(getData.Status, getData)
+	}
+
+	return c.JSON(getData.Status, getData)
+}

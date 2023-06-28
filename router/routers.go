@@ -23,6 +23,7 @@ func RouterApp() *echo.Echo {
 	activity.GET("/", controllers.GetAllActivitiesCTRL)
 	activity.GET("/:id", controllers.GetByIDCTRL)
 	activity.POST("/create", controllers.AddActivityCTRL)
+	activity.DELETE("/delete/:id", controllers.DeleteActivityCTRL)
 
 	return e
 }

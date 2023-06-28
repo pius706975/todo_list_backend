@@ -41,7 +41,7 @@ func GetAllActivities() (Response, error) {
 	}
 
 	res.Status = http.StatusOK
-	res.Message = "Ok"
+	res.Message = "Success"
 	res.Data = arrObj
 
 	return res, nil
@@ -71,7 +71,7 @@ func GetByID(ID int) (Response, error) {
 	}
 
 	res.Status = http.StatusOK
-	res.Message = "Ok"
+	res.Message = "Success"
 	res.Data = obj
 
 	return res, nil
@@ -85,12 +85,12 @@ func AddActivity(title, email string) (Response, error) {
 
 	sqlStatement := "INSERT INTO activities (title, email) VALUES (?, ?)"
 
-	prepareStatement, err := conn.Prepare(sqlStatement)
+	preparedStatement, err := conn.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
 
-	result, err := prepareStatement.Exec(title, email)
+	result, err := preparedStatement.Exec(title, email)
 	if err != nil {
 		return res, err
 	}
@@ -106,12 +106,46 @@ func AddActivity(title, email string) (Response, error) {
 	}
 
 	res.Status = http.StatusOK
-	res.Message = "Ok"
+	res.Message = "Activity has been created"
 	res.Data = newData.Data
 
 	return res, nil
 }
 
-// func DeleteActivity()  {
+func DeleteActivity(ID int) (Response, error) {
 
-// }
+	var res Response
+
+	conn := databases.CreateConn()
+
+	getData, err := GetByID(ID)
+	if err != nil {
+		return res, err
+	}
+
+	sqlStatement := "DELETE FROM activities WHERE activity_id = ?"
+
+	preparedStatement, err := conn.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	_, err = preparedStatement.Exec(ID)
+	if err != nil {
+		return res, err
+	}
+
+	if getData.Status == http.StatusNotFound {
+		res.Status = http.StatusNotFound
+		res.Message = "Data not found"
+		res.Data = ""
+
+		return res, nil
+	}
+
+	res.Status = http.StatusOK
+	res.Message = "Activity has been deleted"
+	res.Data = getData.Data
+
+	return res, nil
+}
