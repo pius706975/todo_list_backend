@@ -13,7 +13,7 @@ func DBInit()  {
 	conf := GetConfig()
 
 	// data source name
-	connectionSTR := conf.DB_USER + ":" + conf.DB_PASS + "@tcp(" + conf.DB_HOST + ":" + conf.DB_PORT + ")/" + conf.DB_NAME
+	connectionSTR := conf.DB_USER + ":" + conf.DB_PASS + "@tcp(" + conf.DB_HOST + ":" + conf.DB_PORT + ")/" + conf.DB_NAME + "?parseTime=true"
 
 	db, err = sql.Open("mysql", connectionSTR)
 	if err != nil {
