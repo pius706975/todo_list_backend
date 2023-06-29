@@ -24,6 +24,7 @@ func RouterApp() *echo.Echo {
 	activity.GET("/:id", controllers.GetByIDCTRL)
 	activity.POST("/create", controllers.AddActivityCTRL)
 	activity.DELETE("/delete/:id", controllers.DeleteActivityCTRL)
+	activity.PATCH("/update/:id", controllers.UpdateActivityCTRL)
 
 	return e
 }
