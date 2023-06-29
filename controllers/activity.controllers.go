@@ -22,15 +22,15 @@ func AddActivityCTRL(c echo.Context) error {
 }
 
 func DeleteActivityCTRL(c echo.Context) error {
-	
+
 	ID := c.Param("id")
-	
+
 	activityID, err := strconv.Atoi(ID)
 	if err != nil {
 		res := models.Response{
-			Status: http.StatusBadRequest,
+			Status:  http.StatusBadRequest,
 			Message: "Invalid ID",
-			Data: "",
+			Data:    "",
 		}
 		return c.JSON(http.StatusBadRequest, res)
 	}
@@ -44,7 +44,7 @@ func DeleteActivityCTRL(c echo.Context) error {
 }
 
 func UpdateActivityCTRL(c echo.Context) error {
-	 
+
 	// ID := c.FormValue("id")
 	ID := c.Param("id")
 	title := c.FormValue("title")
@@ -53,9 +53,9 @@ func UpdateActivityCTRL(c echo.Context) error {
 	idINT, err := strconv.Atoi(ID)
 	if err != nil {
 		res := models.Response{
-			Status: http.StatusBadRequest,
+			Status:  http.StatusBadRequest,
 			Message: "Invalid ID",
-			Data: "",
+			Data:    "",
 		}
 		return c.JSON(http.StatusBadRequest, res)
 	}
@@ -69,7 +69,7 @@ func UpdateActivityCTRL(c echo.Context) error {
 }
 
 func GetAllActivitiesCTRL(c echo.Context) error {
-	
+
 	result, err := models.GetAllActivities()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
@@ -86,9 +86,9 @@ func GetByIDCTRL(c echo.Context) error {
 	activityID, err := strconv.Atoi(ID)
 	if err != nil {
 		res := models.Response{
-			Status: http.StatusBadRequest,
+			Status:  http.StatusBadRequest,
 			Message: "Invalid ID",
-			Data: "",
+			Data:    "",
 		}
 		return c.JSON(http.StatusBadRequest, res)
 	}
@@ -103,6 +103,5 @@ func GetByIDCTRL(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"result": activity,
 	})
-
 
 }

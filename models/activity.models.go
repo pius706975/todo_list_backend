@@ -99,6 +99,14 @@ func UpdateActivity(ID int, title, email string) (Response, error) {
 		return res, err
 	}
 
+	if getData.Status == http.StatusNotFound {
+		res.Status = http.StatusNotFound
+		res.Message = "Data not found"
+		res.Data = ""
+
+		return res, nil
+	}
+
 	// getting old data
 	data := getData.Data.(Activity)
 	if title == "" {
@@ -116,17 +124,9 @@ func UpdateActivity(ID int, title, email string) (Response, error) {
 		return res, err
 	}
 
-	_, err = preparedStatement.Exec(ID, title, email)
+	_, err = preparedStatement.Exec(title, email, ID)
 	if err != nil {
 		return res, err
-	}
-
-	if getData.Status == http.StatusNotFound {
-		res.Status = http.StatusNotFound
-		res.Message = "Data not found"
-		res.Data = ""
-
-		return res, nil
 	}
 
 	updatedActivity, err := GetByID(ID)
