@@ -25,7 +25,7 @@ func DeleteActivityCTRL(c echo.Context) error {
 
 	ID := c.Param("id")
 
-	activityID, err := strconv.Atoi(ID)
+	idINT, err := strconv.Atoi(ID)
 	if err != nil {
 		res := models.Response{
 			Status:  http.StatusBadRequest,
@@ -35,7 +35,7 @@ func DeleteActivityCTRL(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, res)
 	}
 
-	getData, err := models.DeleteActivity(activityID)
+	getData, err := models.DeleteActivity(idINT)
 	if err != nil {
 		return c.JSON(getData.Status, getData)
 	}
@@ -83,7 +83,7 @@ func GetByIDCTRL(c echo.Context) error {
 	// Get ID from request parameters
 	ID := c.Param("id")
 
-	activityID, err := strconv.Atoi(ID)
+	idINT, err := strconv.Atoi(ID)
 	if err != nil {
 		res := models.Response{
 			Status:  http.StatusBadRequest,
@@ -93,7 +93,7 @@ func GetByIDCTRL(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, res)
 	}
 
-	activity, err := models.GetByID(activityID)
+	activity, err := models.GetByID(idINT)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),

@@ -8,7 +8,7 @@ import (
 )
 
 type Activity struct {
-	ActivityID string    `json:"id" valid:"-"`
+	ActivityID int       `json:"id" valid:"-"`
 	Title      string    `json:"title" valid:"-"`
 	Email      string    `json:"email" valid:"-"`
 	CreatedAt  time.Time `json:"created_at" valid:"-"`
@@ -16,14 +16,14 @@ type Activity struct {
 }
 
 func AddActivity(title, email string) (Response, error) {
-	
+
 	var res Response
 
-	conn := databases.CreateConn()
+	db := databases.CreateConn()
 
 	sqlStatement := "INSERT INTO activities (title, email) VALUES (?, ?)"
 
-	preparedStatement, err := conn.Prepare(sqlStatement)
+	preparedStatement, err := db.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
@@ -54,7 +54,7 @@ func DeleteActivity(ID int) (Response, error) {
 
 	var res Response
 
-	conn := databases.CreateConn()
+	db := databases.CreateConn()
 
 	getData, err := GetByID(ID)
 	if err != nil {
@@ -63,7 +63,7 @@ func DeleteActivity(ID int) (Response, error) {
 
 	sqlStatement := "DELETE FROM activities WHERE activity_id = ?"
 
-	preparedStatement, err := conn.Prepare(sqlStatement)
+	preparedStatement, err := db.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
@@ -89,10 +89,10 @@ func DeleteActivity(ID int) (Response, error) {
 }
 
 func UpdateActivity(ID int, title, email string) (Response, error) {
-	
+
 	var res Response
 
-	conn := databases.CreateConn()
+	db := databases.CreateConn()
 
 	getData, err := GetByID(ID)
 	if err != nil {
@@ -116,10 +116,9 @@ func UpdateActivity(ID int, title, email string) (Response, error) {
 		email = data.Email
 	}
 
-
 	sqlStatement := "UPDATE activities SET title = ?, email = ? WHERE activity_id = ?"
 
-	preparedStatement, err := conn.Prepare(sqlStatement)
+	preparedStatement, err := db.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
@@ -142,16 +141,16 @@ func UpdateActivity(ID int, title, email string) (Response, error) {
 }
 
 func GetAllActivities() (Response, error) {
-	
+
 	var obj Activity
 	var arrObj []Activity
 	var res Response
 
-	conn := databases.CreateConn()
+	db := databases.CreateConn()
 
 	sqlStatement := "SELECT * FROM activities ORDER BY created_at DESC"
 
-	rows, err := conn.Query(sqlStatement)
+	rows, err := db.Query(sqlStatement)
 	defer rows.Close()
 	if err != nil {
 		return res, err
@@ -174,15 +173,15 @@ func GetAllActivities() (Response, error) {
 }
 
 func GetByID(ID int) (Response, error) {
-	
+
 	var obj Activity
 	var res Response
 
-	conn := databases.CreateConn()
+	db := databases.CreateConn()
 
 	sqlStatement := "SELECT * FROM activities WHERE activity_id = ?"
 
-	err := conn.QueryRow(sqlStatement, ID).Scan(&obj.ActivityID, &obj.Title, &obj.Email, &obj.CreatedAt, &obj.UpdatedAt)
+	err := db.QueryRow(sqlStatement, ID).Scan(&obj.ActivityID, &obj.Title, &obj.Email, &obj.CreatedAt, &obj.UpdatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			res.Status = http.StatusNotFound

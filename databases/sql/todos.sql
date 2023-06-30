@@ -1,10 +1,12 @@
 CREATE TABLE todos (
-  todo_id BIGINT NOT NULL PRIMARY KEY,
-  activity_group_id CHAR(36),
+  todo_id BIGINT UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  activity_group_id BIGINT UNSIGNED,
   title VARCHAR(255),
-  priority INT,
-  is_active BOOLEAN,
+  priority VARCHAR(255),
+  is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (activity_group_id) REFERENCES activities(activity_id)
+  FOREIGN KEY (activity_group_id) 
+    REFERENCES activities(activity_id) 
+    ON DELETE CASCADE
 );
