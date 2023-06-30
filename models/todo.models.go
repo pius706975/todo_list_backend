@@ -17,6 +17,42 @@ type Todo struct {
 	UpdatedAt       time.Time `json:"updated_at" valid:"-"`
 }
 
+func AddTodoItem(activityGroupID int, title, priority string) (Response, error) {
+
+	var res Response
+
+	db := databases.CreateConn()
+
+	sqlStatement := "INSERT INTO todos (activity_group_id, title, priority) VALUES (?, ?, ?)"
+
+	preparedStatement, err := db.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := preparedStatement.Exec(activityGroupID, title, priority)
+	if err != nil {
+		return res, err
+	}
+
+	ID, err := result.LastInsertId()
+	if err != nil {
+		return res, err
+	}
+
+	newData, err := GetTodoByID(int(ID))
+	if err != nil {
+		return res, err
+	}
+
+	res.Status = http.StatusOK
+	res.Message = "To Do item is added"
+	res.Data = newData.Data
+
+	return res, nil
+
+}
+
 func GetTodoByID(ID int) (Response, error) {
 	
 	var obj Todo
