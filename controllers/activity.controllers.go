@@ -45,7 +45,6 @@ func DeleteActivityCTRL(c echo.Context) error {
 
 func UpdateActivityCTRL(c echo.Context) error {
 
-	// ID := c.FormValue("id")
 	ID := c.Param("id")
 	title := c.FormValue("title")
 	email := c.FormValue("email")

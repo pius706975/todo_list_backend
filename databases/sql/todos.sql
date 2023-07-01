@@ -1,6 +1,6 @@
 CREATE TABLE todos (
   todo_id BIGINT UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  activity_group_id BIGINT UNSIGNED,
+  activity_group_id BIGINT UNSIGNED DEFAULT 0,
   title VARCHAR(255),
   priority VARCHAR(255),
   is_active BOOLEAN DEFAULT true,

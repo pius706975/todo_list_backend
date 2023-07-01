@@ -31,6 +31,7 @@ func RouterApp() *echo.Echo {
 	todo.GET("/:id", controllers.GetTodoByIDCTRL)
 	todo.POST("/create", controllers.AddTodoItemCTRL)
 	todo.DELETE("/delete/:id", controllers.DeleteTodoItemCTRL)
+	todo.PATCH("/update/:id", controllers.UpdateTodoItemCTRL)
 
 	return e
 }
