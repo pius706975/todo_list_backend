@@ -53,6 +53,44 @@ func AddTodoItem(activityGroupID int, title, priority string) (Response, error) 
 
 }
 
+func DeleteTodoItem(ID int) (Response, error) {
+	
+	var res Response
+
+	db := databases.CreateConn()
+
+	getData, err := GetTodoByID(ID)
+	if err != nil {
+		return res, err
+	}
+
+	sqlStatement := "DELETE FROM todos WHERE todo_id = ?"
+
+	preparedStatement, err := db.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	_, err = preparedStatement.Exec(ID)
+	if err != nil {
+		return res, err
+	}
+
+	if getData.Status == http.StatusNotFound {
+		res.Status = http.StatusNotFound
+		res.Message = "Data not found"
+		res.Data = ""
+
+		return res, nil
+	}
+
+	res.Status = http.StatusOK
+	res.Message = "To Do item has been deleted"
+	res.Data = getData.Data
+
+	return res, nil
+}
+
 func GetTodoByID(ID int) (Response, error) {
 	
 	var obj Todo

@@ -34,6 +34,28 @@ func AddTodoItemCTRL(c echo.Context) error {
 
 }
 
+func DeleteTodoItemCTRL(c echo.Context) error {
+	
+	ID := c.Param("id")
+
+	idINT, err := strconv.Atoi(ID)
+	if err != nil {
+		res := models.Response{
+			Status: http.StatusBadRequest,
+			Message: "Invalid ID",
+			Data: "",
+		}
+		return c.JSON(http.StatusBadRequest, res)
+	}
+
+	getData, err := models.DeleteTodoItem(idINT)
+	if err != nil {
+		return c.JSON(getData.Status, getData)
+	}
+
+	return c.JSON(getData.Status, getData)
+}
+
 func GetTodoByIDCTRL(c echo.Context) error {
 	
 	ID := c.Param("id")
