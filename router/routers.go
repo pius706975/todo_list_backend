@@ -21,11 +21,11 @@ func RouterApp() *echo.Echo {
 	})
 
 	// Activity Controllers
-	activity.GET("/", controllers.GetAllActivitiesCTRL)
+	activity.GET("", controllers.GetAllActivitiesCTRL)
 	activity.GET("/:id", controllers.GetByIDCTRL)
-	activity.POST("/create", controllers.AddActivityCTRL)
-	activity.DELETE("/delete/:id", controllers.DeleteActivityCTRL)
-	activity.PATCH("/update/:id", controllers.UpdateActivityCTRL)
+	activity.POST("", controllers.AddActivityCTRL)
+	activity.DELETE("/:id", controllers.DeleteActivityCTRL)
+	activity.PATCH("/:id", controllers.UpdateActivityCTRL)
 
 	// To-Do Controllers
 	todo.GET("/", controllers.GetAllTodoItemsCTRL)
