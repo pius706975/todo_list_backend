@@ -94,6 +94,16 @@ func UpdateTodoItemCTRL(c echo.Context) error {
 
 func GetAllTodoItemsCTRL(c echo.Context) error {
 	
+	result, err := models.GetAllTodoItems()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func GetTodoItemsByGroupCTRL(c echo.Context) error {
+	
 	activityGroupID := c.QueryParam("activity_group_id")
 	
 	activityGroupIDINT, err := strconv.Atoi(activityGroupID)
@@ -106,7 +116,7 @@ func GetAllTodoItemsCTRL(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, res)
 	}
 
-	todos, err := models.GetAllTodoItems(activityGroupIDINT)
+	todos, err := models.GetTodoItemsByGroup(activityGroupIDINT)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

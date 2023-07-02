@@ -29,6 +29,7 @@ func RouterApp() *echo.Echo {
 
 	// To-Do Controllers
 	todo.GET("/", controllers.GetAllTodoItemsCTRL)
+	todo.GET("", controllers.GetTodoItemsByGroupCTRL)
 	todo.GET("/:id", controllers.GetTodoByIDCTRL)
 	todo.POST("/create", controllers.AddTodoItemCTRL)
 	todo.DELETE("/delete/:id", controllers.DeleteTodoItemCTRL)
