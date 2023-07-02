@@ -148,7 +148,7 @@ func GetAllActivities() (Response, error) {
 
 	db := databases.CreateConn()
 
-	sqlStatement := "SELECT * FROM activities ORDER BY created_at DESC"
+	sqlStatement := "SELECT * FROM activities"
 
 	rows, err := db.Query(sqlStatement)
 	defer rows.Close()

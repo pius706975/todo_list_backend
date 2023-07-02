@@ -155,6 +155,44 @@ func UpdateTodoItem(ID, activitiGroupID int, title, priority string, isActive st
 	return res, nil
 }
 
+func GetAllTodoItems(ID int) (Response, error) {
+
+	var obj Todo
+	var arrObj []Todo
+	var res Response
+
+	db := databases.CreateConn()
+
+	sqlStatement := "SELECT * FROM todos WHERE activity_group_id = ?"
+
+	rows, err := db.Query(sqlStatement, ID)
+	defer rows.Close()
+	if err != nil {
+		return res, err
+	}
+
+	for rows.Next() {
+		err := rows.Scan(&obj.TodoID, &obj.ActivityGroupID, &obj.Title, &obj.Priority, &obj.IsActive, &obj.CreatedAt, &obj.UpdatedAt)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				res.Status = http.StatusNotFound
+				res.Message = "Data not found"
+				res.Data = ""
+	
+				return res, nil
+			}
+		}
+
+		arrObj = append(arrObj, obj)
+	}
+
+	res.Status = http.StatusOK
+	res.Message = "Success"
+	res.Data = arrObj
+
+	return res, nil
+}
+
 func GetTodoByID(ID int) (Response, error) {
 
 	var obj Todo
