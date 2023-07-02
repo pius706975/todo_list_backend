@@ -79,7 +79,6 @@ func GetAllActivitiesCTRL(c echo.Context) error {
 
 func GetByIDCTRL(c echo.Context) error {
 
-	// Get ID from request parameters
 	ID := c.Param("id")
 
 	idINT, err := strconv.Atoi(ID)

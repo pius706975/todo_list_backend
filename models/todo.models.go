@@ -155,43 +155,48 @@ func UpdateTodoItem(ID, activitiGroupID int, title, priority string, isActive st
 	return res, nil
 }
 
-func GetAllTodoItems(ID int) (Response, error) {
+func GetAllTodoItems(activityGroupID int) (Response, error) {
 
-	var obj Todo
-	var arrObj []Todo
+	var todos []Todo
 	var res Response
 
 	db := databases.CreateConn()
 
-	sqlStatement := "SELECT * FROM todos WHERE activity_group_id = ?"
-
-	rows, err := db.Query(sqlStatement, ID)
+	rows, err := db.Query("SELECT * FROM todos WHERE activity_group_id = ?", activityGroupID)
+	if err != nil {
+		return res, err
+	}
 	defer rows.Close()
+
+	for rows.Next() {
+		var todo Todo
+		
+		err := rows.Scan(&todo.TodoID, &todo.ActivityGroupID, &todo.Title, &todo.Priority, &todo.IsActive, &todo.CreatedAt, &todo.UpdatedAt)
+		if err != nil {
+			return res, err
+		}
+		todos = append(todos, todo)
+	}
+
+	err = rows.Err()
 	if err != nil {
 		return res, err
 	}
 
-	for rows.Next() {
-		err := rows.Scan(&obj.TodoID, &obj.ActivityGroupID, &obj.Title, &obj.Priority, &obj.IsActive, &obj.CreatedAt, &obj.UpdatedAt)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				res.Status = http.StatusNotFound
-				res.Message = "Data not found"
-				res.Data = ""
-	
-				return res, nil
-			}
-		}
+	if len(todos) == 0 {
+		res.Status = http.StatusNotFound
+		res.Message = "Data not found"
+		res.Data = ""
 
-		arrObj = append(arrObj, obj)
+		return res, nil
 	}
 
 	res.Status = http.StatusOK
 	res.Message = "Success"
-	res.Data = arrObj
+	res.Data = todos
 
 	return res, nil
-}
+} 
 
 func GetTodoByID(ID int) (Response, error) {
 

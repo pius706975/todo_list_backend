@@ -94,29 +94,24 @@ func UpdateTodoItemCTRL(c echo.Context) error {
 
 func GetAllTodoItemsCTRL(c echo.Context) error {
 	
-	ID := c.Param("id")
-
-	idINT, err := strconv.Atoi(ID)
+	activityGroupID := c.QueryParam("activity_group_id")
+	
+	activityGroupIDINT, err := strconv.Atoi(activityGroupID)
 	if err != nil {
 		res := models.Response{
 			Status: http.StatusBadRequest,
-			Message: "Invalid ID",
+			Message: "Invalid activity group ID",
 			Data: "",
 		}
-
 		return c.JSON(http.StatusBadRequest, res)
 	}
 
-	todos, err := models.GetAllTodoItems(idINT)
+	todos, err := models.GetAllTodoItems(activityGroupIDINT)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error": err.Error(),
-		})
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"result": todos,
-	})
+	return c.JSON(http.StatusOK, todos)
 }
 
 func GetTodoByIDCTRL(c echo.Context) error {
