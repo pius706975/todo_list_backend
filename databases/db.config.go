@@ -22,3 +22,4 @@ func GetConfig() Configuration {
 
 	return conf
 }
+
