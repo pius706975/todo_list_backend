@@ -5,12 +5,22 @@ import (
 	"pius/models"
 	"strconv"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/labstack/echo/v4"
 )
 
 func AddTodoItemCTRL(c echo.Context) error {
 	
 	activitiGroupID := c.FormValue("activity_group_id")
+
+	if govalidator.IsNull(activitiGroupID) {
+		res := models.Response{
+			Status: http.StatusBadRequest,
+			Message: "Activity group id cannot be empty",
+			Data: "",
+		}
+		return c.JSON(http.StatusBadRequest, res)
+	}
 
 	idINT, err := strconv.Atoi(activitiGroupID)
 	if err != nil {
@@ -24,6 +34,15 @@ func AddTodoItemCTRL(c echo.Context) error {
 
 	title := c.FormValue("title")
 	priority := c.FormValue("priority")
+
+	if govalidator.IsNull(title) {
+		res := models.Response{
+			Status: http.StatusBadRequest,
+			Message: "Title cannot be empty",
+			Data: "",
+		}
+		return c.JSON(http.StatusBadRequest, res)
+	}
 
 	result, err := models.AddTodoItem(idINT, title, priority)
 	if err != nil {

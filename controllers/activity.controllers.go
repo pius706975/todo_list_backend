@@ -5,6 +5,7 @@ import (
 	"pius/models"
 	"strconv"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/labstack/echo/v4"
 )
 
@@ -12,6 +13,15 @@ func AddActivityCTRL(c echo.Context) error {
 
 	title := c.FormValue("title")
 	email := c.FormValue("email")
+
+	if govalidator.IsNull(title) {
+		res := models.Response{
+			Status: http.StatusBadRequest,
+			Message: "Title cannot be empty",
+			Data: "",
+		}
+		return c.JSON(http.StatusBadRequest, res)
+	}
 
 	result, err := models.AddActivity(title, email)
 	if err != nil {
